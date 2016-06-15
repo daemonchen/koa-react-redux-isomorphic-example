@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import Cart from './Cart.jsx';
+import Cart from './Cart.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ShopActions from '../actions/ShopActions';

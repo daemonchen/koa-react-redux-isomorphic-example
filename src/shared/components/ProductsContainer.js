@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import ProductItem from './ProductItem.jsx';
-import ProductsList from './ProductsList.jsx';
-import ProductItemContainer from './ProductItemContainer.jsx';
+import ProductItem from './ProductItem.js';
+import ProductsList from './ProductsList.js';
+import ProductItemContainer from './ProductItemContainer.js';
 import * as ShopActions from '../actions/ShopActions';
 import { fetchNeeds } from '../utils/fetchComponentData';
 

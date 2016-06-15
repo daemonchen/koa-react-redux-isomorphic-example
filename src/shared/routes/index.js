@@ -1,13 +1,23 @@
 import React from 'react'
 import { Route } from 'react-router'
-import {HelloWorld} from '../components'
+import TodoApp from '../components/TodoApp';
+import ProductsContainer from '../components/ProductsContainer';
+import ProductDetail from '../components/ProductDetail';
+import CartContainer from '../components/CartContainer';
+import NotFound from '../components/NotFound';
 
 export default (
 
-    <Route>
+    <Route component={TodoApp}>
 
-    <Route path="/" component={HelloWorld} />
-    
+    <Route path="/"
+  components={{main: ProductsContainer, cart: CartContainer}} />
+
+    <Route path="/:id"
+  components={{main: ProductDetail, cart: CartContainer}} />
+
+    <Route path="*"
+  components={{main: NotFound, cart: null}} />
     </Route>
 
 )

@@ -12,17 +12,18 @@ import path from 'path'
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 
-import { Router, RouterContext, match } from 'react-router';
+import { Router, RouterContext, match } from 'react-router'
 import routes from '../shared/routes';
 
-import { applyMiddleware, createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux'
 import { Provider } from 'react-redux';
 
 import thunkMiddleware from 'redux-thunk'
-import promiseMiddleware from 'redux-promise';
-import combinedReducers from '../shared/reducers';
+import promiseMiddleware from 'redux-promise'
+import combinedReducers from '../shared/reducers'
 
-const finalCreateStore = applyMiddleware(promiseMiddleware, thunkMiddleware)( createStore );)
+import fetchComponentData from '../common/utils/fetchComponentData'
+const finalCreateStore = applyMiddleware(promiseMiddleware, thunkMiddleware)( createStore )
 
 // Logger
 app.use(logger())
@@ -45,6 +46,7 @@ app.use( function* () {
     if ( renderProps == null ) 
       this.throw(404, 'Not Found')
 
+    fetchComponentData( store.dispatch, renderProps.components, renderProps.params)
 
     const initView = renderToString((
 	<Provider store={store}>
@@ -52,17 +54,16 @@ app.use( function* () {
 	</Provider>
     ))
     
-      let state = JSON.stringify( store.getState() );
+    let state = JSON.stringify( store.getState() );
 
-      let page = renderFullPage( initView, state )
+    let page = renderFullPage( initView, state )
 
-      return page;
+    return page;
 
   })
 
   this.body = finalPage
 
-  })
 })
 
 

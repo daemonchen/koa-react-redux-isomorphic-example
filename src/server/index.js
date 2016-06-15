@@ -1,4 +1,5 @@
 'use strict'
+
 import Koa from 'koa'
 const app = Koa()
 
@@ -12,15 +13,16 @@ import React from 'react'
 import { renderToString } from 'react-dom/server'
 
 import { Router, RouterContext, match } from 'react-router';
-import routes from '../common/routes/routing';
+import routes from '../shared/routes';
 
 import { applyMiddleware, createStore } from 'redux';
 import { Provider } from 'react-redux';
 
-import promiseMiddleware from '../common/middlewares/PromiseMiddleware';
-import combinedReducers from '../common/reducers';
+import thunkMiddleware from 'redux-thunk'
+import promiseMiddleware from 'redux-promise';
+import combinedReducers from '../shared/reducers';
 
-const finalCreateStore = applyMiddleware(promiseMiddleware)( createStore );)
+const finalCreateStore = applyMiddleware(promiseMiddleware, thunkMiddleware)( createStore );)
 
 // Logger
 app.use(logger())

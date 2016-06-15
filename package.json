@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "npm run build && nodemon --harmony dist/server",
-    "build": "babel src --out-dir dist",
+    "start": "npm run build & nodemon --harmony dist/server",
+      "build": "mkdir dist & babel src/server --out-file dist/server.js --source-maps inline",
     "test": "mocha"
   },
   "dependencies": {

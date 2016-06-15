@@ -3,6 +3,6 @@
   "ext": "js html",
   "watch": [ "src/"],
   "events": {
-    "restart": "babel src --out-dir dist"
+    "restart": "npm run build"
   }
 }

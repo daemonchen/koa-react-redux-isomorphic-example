@@ -22,7 +22,7 @@ import thunkMiddleware from 'redux-thunk'
 import promiseMiddleware from 'redux-promise'
 import combinedReducers from '../shared/reducers'
 
-import fetchComponentData from '../common/utils/fetchComponentData'
+import fetchComponentData from '../shared/utils/fetchComponentData'
 const finalCreateStore = applyMiddleware(promiseMiddleware, thunkMiddleware)( createStore )
 
 // Logger

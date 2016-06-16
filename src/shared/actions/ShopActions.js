@@ -1,4 +1,3 @@
-
 import types from '../constants/ActionTypes'
 import WebAPIUtils from '../utils/WebAPIUtils'
 
@@ -6,7 +5,7 @@ export function readAll() {
 	console.log( 'readAll run' )
 	return {
 		// REQUEST | SUCCESS | ERROR were declared for optimistic update
-		types: [ types.READ_ALL_PRODUCTS_REQUEST, types.READ_ALL_PRODUCTS_SUCCESS, types.READ_ALL_PRODUCTS_ERROR ],
+		type: types.READ_ALL_PRODUCTS_REQUEST,
 		// WebAPIUtils 會操作遠端 REST API 獲取資料
 		promise: WebAPIUtils.getAllProducts()//.then( result => console.log( 'preview result: ', result ) )
 	};

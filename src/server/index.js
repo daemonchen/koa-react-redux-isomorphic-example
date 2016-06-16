@@ -28,44 +28,59 @@ const finalCreateStore = applyMiddleware(promiseMiddleware, thunkMiddleware)( cr
 // Logger
 app.use(logger())
 
+// Serve static files
+app.use(serve(path.join(__dirname, 'public')))
+
 // ToDo: Submodule render like
 // delegate routes to react-router
 app.use( function* () {
-  
-  const store = finalCreateStore(combinedReducers);
+
+  const store = finalCreateStore(combinedReducers)
 
   // react-router
-  let finalPage = yield match( {routes, location: this.url}, ( error, redirectLocation, renderProps ) => {
-
-    if ( error )
-      this.throw(500, error.message)
-
-    if ( redirectLocation )
-      this.redirect(redirectLocation.pathname + redirectLocation.search)
-    
-    if ( renderProps == null ) 
-      this.throw(404, 'Not Found')
-
-    fetchComponentData( store.dispatch, renderProps.components, renderProps.params)
-
-    const initView = renderToString((
-	<Provider store={store}>
-	<RouterContext {...renderProps} />
-	</Provider>
-    ))
-    
-    let state = JSON.stringify( store.getState() );
-
-    let page = renderFullPage( initView, state )
-
-    return page;
-
-  })
+  let finalPage = yield routerMatch(routes, this.url, store)
 
   this.body = finalPage
 
 })
 
+// ToDo: submodule of this
+function routerMatch(routes, location, store) {
+  return new Promise((resolve, reject) => {
+    match( {routes, location: location}, ( error, redirectLocation, renderProps ) => {
+
+      if ( error ){
+        error.status
+        reject(error)
+      }
+
+      if ( redirectLocation ){
+        let responseValue = {type: 'redirection', url: redirectLocation.pathname + redirectLocation.search}
+        resolve(responseValue)
+      }
+
+      if ( renderProps == null ){
+        let error = {message: 'Not Found', status: 404}
+        reject(error)
+      }
+
+      fetchComponentData( store.dispatch, renderProps.components, renderProps.params)
+
+      const initView = renderToString((
+	  <Provider store={store}>
+	  <RouterContext {...renderProps} />
+	  </Provider>
+      ))
+
+      let state = JSON.stringify( store.getState() );
+
+      let page = renderFullPage( initView, state )
+
+      resolve(page);
+
+    })
+  })
+}
 
 function renderFullPage(html, initialState) {
   return `
@@ -83,9 +98,6 @@ function renderFullPage(html, initialState) {
 	</html>
 	`
 }
-
-// Serve static files
-app.use(serve(path.join(__dirname, 'public')))
 
 // Compress
 app.use(compress())

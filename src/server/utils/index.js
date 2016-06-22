@@ -1,8 +1,10 @@
-import {match} from 'react-router'
+import {
+    match
+} from 'react-router'
 import fetchComponentData from '../../shared/utils/fetchComponentData'
 
 function renderFullPage(html, initialState) {
-  return `
+    return `
     <!doctype html>
     <html lang="utf-8">
     <head>
@@ -19,44 +21,61 @@ function renderFullPage(html, initialState) {
 }
 
 export function coRouterMatch(routes, location, view, store) {
-  if(arguments.length < 2 && arguments[0]){
-    let {routes, location, view, store} = this.arguments
-  }
-  
-  return new Promise((resolve, reject) => {
-    match( {routes, location}, ( error, redirectLocation, renderProps ) => {
+    if (arguments.length < 2 && arguments[0]) {
+        let {
+            routes,
+            location,
+            view,
+            store
+        } = this.arguments
+    }
 
-      if ( error ){
-        error.status
-        reject(error)
-      }
+    return new Promise((resolve, reject) => {
+        match({
+            routes,
+            location
+        }, (error, redirectLocation, renderProps) => {
 
-      if ( redirectLocation ){
-        let responseValue = {type: 'redirection', url: redirectLocation.pathname + redirectLocation.search}
-        resolve(responseValue)
-      }
+            if (error) {
+                error.status
+                reject(error)
+            }
 
-      if ( renderProps == null ){
-        let error = {message: 'Not Found', status: 404}
-        reject(error)
-      }
+            if (redirectLocation) {
+                let responseValue = {
+                    type: 'redirection',
+                    url: redirectLocation.pathname + redirectLocation.search
+                }
+                resolve(responseValue)
+            }
 
-      fetchComponentData( store.dispatch, renderProps.components, renderProps.params)
+            if (renderProps == null) {
+                let error = {
+                    message: 'Not Found',
+                    status: 404
+                }
+                reject(error)
+            }
 
-      const initView = renderToString((
-	  <Provider store={store}>
-	  <RouterContext {...renderProps} />
-	  </Provider>
-      ))
+            fetchComponentData(store.dispatch, renderProps.components, renderProps.params)
 
-      let state = JSON.stringify( store.getState() );
+            const initView = renderToString((
+                <Provider store={store}>
+      <RouterContext {...renderProps} />
+      </Provider>
+            ))
 
-      let page = renderFullPage( initView, state )
+            let state = JSON.stringify(store.getState());
 
-      let responseValue = {type:'page', page}
+            let page = renderFullPage(initView, state)
 
-      resolve(responseValue);
+            let responseValue = {
+                type: 'html',
+                page
+            }
 
+            resolve(responseValue);
+
+        })
     })
-  })
 }

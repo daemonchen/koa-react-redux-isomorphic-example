@@ -10,21 +10,33 @@ import path from 'path'
 
 // React-redux dependencies
 import React from 'react'
-import { renderToString } from 'react-dom/server'
+import {
+    renderToString
+} from 'react-dom/server'
 
-import { Router, RouterContext } from 'react-router'
+import {
+    Router,
+    RouterContext
+} from 'react-router'
 import routes from '../shared/routes';
 
-import { applyMiddleware, createStore } from 'redux'
-import { Provider } from 'react-redux';
+import {
+    applyMiddleware,
+    createStore
+} from 'redux'
+import {
+    Provider
+} from 'react-redux';
 
 import thunkMiddleware from 'redux-thunk'
 import promiseMiddleware from 'redux-promise'
 import combinedReducers from '../shared/reducers'
 
-import { coRouterMatch } from './utils'
+import {
+    coRouterMatch
+} from './utils'
 
-const finalCreateStore = applyMiddleware(promiseMiddleware, thunkMiddleware)( createStore )
+const finalCreateStore = applyMiddleware(promiseMiddleware, thunkMiddleware)(createStore)
 
 // Logger
 app.use(logger())
@@ -34,14 +46,15 @@ app.use(serve(path.join(__dirname, 'public')))
 
 // ToDo: Submodule render like
 // delegate routes to react-router
-app.use( function* () {
+app.use(async(ctx, next) => {
 
-  const store = finalCreateStore(combinedReducers)
+    const store = finalCreateStore(combinedReducers)
 
-  // react-router
-  let finalPage = yield coRouterMatch(routes, this.url, store)
+    // react-router
+    let finalPage = await coRouterMatch(routes, ctx.url, store)
 
-  this.body = finalPage
+    ctx.type = finalPage.type
+    ctx.body = finalPage.page
 
 })
 
@@ -49,8 +62,8 @@ app.use( function* () {
 app.use(compress())
 
 if (!module.parent) {
-  app.listen(3000)
-  console.log('listening on port 3000')
+    app.listen(3000)
+    console.log('listening on port 3000')
 }
 
 export default app

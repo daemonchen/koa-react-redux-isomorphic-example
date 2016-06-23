@@ -57,24 +57,24 @@ export function coRouterMatch(routes, location, view, store) {
                 reject(error)
             }
 
-            fetchComponentData(store.dispatch, renderProps.components, renderProps.params)
+            fetchComponentData(store.dispatch, renderProps.components, renderProps.params).then(() => {
+                const initView = renderToString((
+                    <Provider store={store}>
+                        <RouterContext {...renderProps} />
+                    </Provider>
+                ))
 
-            const initView = renderToString((
-                <Provider store={store}>
-      <RouterContext {...renderProps} />
-      </Provider>
-            ))
+                let state = JSON.stringify(store.getState())
 
-            let state = JSON.stringify(store.getState());
+                let page = renderFullPage(initView, state)
 
-            let page = renderFullPage(initView, state)
+                let responseValue = {
+                    type: 'html',
+                    page
+                }
 
-            let responseValue = {
-                type: 'html',
-                page
-            }
-
-            resolve(responseValue);
+                resolve(responseValue)
+            })
 
         })
     })
